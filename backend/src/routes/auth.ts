@@ -8,7 +8,6 @@ import {
   register,
 } from '../controllers/auth';
 import {
-  authHeaderValidator,
   loginValidator,
   registerValidator,
 } from '../middlewares/validations';
@@ -19,6 +18,6 @@ authRouter.post('/login', loginValidator, login);
 authRouter.post('/register', registerValidator, register);
 authRouter.get('/token', refreshAccessToken);
 authRouter.get('/logout', logout);
-authRouter.get('/user', authHeaderValidator, auth, getCurrentUser);
+authRouter.get('/user', auth, getCurrentUser);
 
 export default authRouter;

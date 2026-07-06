@@ -1,6 +1,7 @@
 import { randomBytes } from 'crypto';
 import path from 'path';
 import multer from 'multer';
+import BadRequestError from '../errors/bad-request-error';
 import { tempDir } from '../utils/file';
 
 const ALLOWED_MIME_TYPES = [
@@ -27,7 +28,7 @@ const fileFilter: multer.Options['fileFilter'] = (_req, file, cb) => {
     cb(null, true);
     return;
   }
-  cb(new Error('Недопустимый тип файла'));
+  cb(new BadRequestError('Недопустимый тип файла'));
 };
 
 const fileMiddleware = multer({

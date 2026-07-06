@@ -27,6 +27,17 @@ export const moveImageToPermanent = async (fileName: string): Promise<void> => {
   }
 };
 
+export const deleteImageFile = async (fileName: string): Promise<void> => {
+  const baseName = path.basename(fileName);
+  const filePath = path.join(imagesDir, baseName);
+
+  try {
+    await fs.unlink(filePath);
+  } catch {
+    // файл уже удалён или отсутствует
+  }
+};
+
 export const cleanTempDirectory = async (): Promise<void> => {
   try {
     const files = await fs.readdir(tempDir);

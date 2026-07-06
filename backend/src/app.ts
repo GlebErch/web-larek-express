@@ -3,7 +3,6 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 import cron from 'node-cron';
-import { errors } from 'celebrate';
 import config from './config';
 import router from './routes';
 import { requestLogger, errorLogger } from './middlewares/logger';
@@ -26,7 +25,6 @@ app.use((_req, _res, next) => {
   next(new NotFoundError('Маршрут не найден'));
 });
 app.use(errorLogger);
-app.use(errors());
 app.use(errorHandler);
 
 const start = async (): Promise<void> => {

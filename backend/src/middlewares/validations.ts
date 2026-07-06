@@ -83,9 +83,3 @@ export const registerValidator = celebrate({
     password: Joi.string().min(6).required(),
   }),
 });
-
-export const authHeaderValidator = celebrate({
-  [Segments.HEADERS]: Joi.object({
-    authorization: Joi.string().required(),
-  }).unknown(true),
-});

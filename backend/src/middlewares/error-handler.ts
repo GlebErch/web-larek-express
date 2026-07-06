@@ -1,4 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
+import { isCelebrateError } from 'celebrate';
+import multer from 'multer';
 import BadRequestError from '../errors/bad-request-error';
 import ConflictError from '../errors/conflict-error';
 import NotFoundError from '../errors/not-found-error';
@@ -6,6 +8,20 @@ import NotFoundError from '../errors/not-found-error';
 interface AppError extends Error {
   statusCode?: number;
 }
+
+const getCelebrateMessage = (err: unknown): string => {
+  if (!isCelebrateError(err)) {
+    return 'Ошибка валидации данных';
+  }
+
+  const [firstDetail] = [...err.details.values()];
+
+  if (!firstDetail?.message) {
+    return 'Ошибка валидации данных';
+  }
+
+  return firstDetail.message.replace(/"/g, '');
+};
 
 const errorHandler = (
   err: AppError,
@@ -15,6 +31,19 @@ const errorHandler = (
 ): void => {
   if (res.headersSent) {
     next(err);
+    return;
+  }
+
+  if (isCelebrateError(err)) {
+    res.status(400).send({ message: getCelebrateMessage(err) });
+    return;
+  }
+
+  if (err instanceof multer.MulterError) {
+    const message = err.code === 'LIMIT_FILE_SIZE'
+      ? 'Превышен допустимый размер файла'
+      : 'Ошибка загрузки файла';
+    res.status(400).send({ message });
     return;
   }
 

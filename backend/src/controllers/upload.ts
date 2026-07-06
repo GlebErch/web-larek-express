@@ -13,7 +13,7 @@ const uploadFile = (
   }
 
   res.send({
-    fileName: `/${config.uploadPath}/${req.file.filename}`,
+    fileName: `/${config.uploadPathTemp}/${req.file.filename}`,
     originalName: req.file.originalname,
   });
 };
